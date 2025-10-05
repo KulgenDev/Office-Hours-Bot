@@ -31,18 +31,6 @@ async def on_ready():
     except Exception as e:
         print(e)
 
-
-
-@bot.event
-async def on_message(message):
-    print(message.content)
-    if message.author == bot.user:
-        return
-    if "shit" in message.content:
-        await message.channel.send(f"{message.author.mention} don't say that")
-
-    await bot.process_commands(message)
-
 @bot.slash_command(name="sync", description="Sync events", guild=GUILD_ID)
 async def sync(ctx):
     await ctx.defer()
