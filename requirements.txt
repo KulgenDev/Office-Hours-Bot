@@ -1,0 +1,6 @@
+discord.py
+python-dotenv
+icalendar
+py-cord
+datetime
+pathlib
