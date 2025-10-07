@@ -90,7 +90,7 @@ def startOfWeek(date: dt.datetime) -> dt.datetime:
     return date + dt.timedelta(days=-1 * diff)
 
 @bot.slash_command(name="getoffcehours", description="shows the office hours of a specific user", guild=GUILD_ID)
-@discord.option("weeks", type=int, required=True, min_value=1)
+@discord.option("weeks", type=int, required=True, min_value=1, description="The amount of weeks starting from this current week that the bot will show office hours for")
 async def getoffcehours(ctx: discord.ApplicationContext, user: discord.User, weeks: int):
     date = dt.datetime(dt.datetime.now().year, dt.datetime.now().month, dt.datetime.now().day,
                        0, 0, 0, tzinfo=zoneinfo.ZoneInfo("America/New_York"))
@@ -134,8 +134,8 @@ def makeNewCalendar() -> Calendar:
 @discord.option("new_pm", type=bool, required=True, description="True = PM, False = AM")
 @discord.option("weeks", type=int, required=True, min_value=0, description="The amount of weeks this event will reoccur")
 async def editevents(ctx: discord.ApplicationContext,  start_day: int, start_month: int, start_year: int,
-                    start_hour: int, start_minute: int, start_pm: bool, new_day: int, new_month: int, new_year: int, new_start_hour: int, new_start_minute: int,
-                     new_length_hours: int, new_length_minutes: int, new_pm: bool, weeks: int):
+                    start_hour: int, start_minute: int, start_pm: bool, new_day: int, new_month: int, new_year: int, new_start_hour: int, new_start_minute: int, new_pm: bool,
+                     new_length_hours: int, new_length_minutes: int, weeks: int):
     await ctx.defer()
     temp = makeNewCalendar()
 
@@ -151,7 +151,7 @@ async def editevents(ctx: discord.ApplicationContext,  start_day: int, start_mon
     with ThreadPoolExecutor() as executor:
         for event in cal.walk("VEVENT"):
             eventTime = event.get("dtstart").dt
-            if (eventTime >= start and eventTime.day < (start + dt.timedelta(weeks=weeks)).day
+            if (start <= eventTime < (start + dt.timedelta(weeks=weeks))
                     and str(ctx.author.id) in event.get("SUMMARY") and eventTime.hour == start.hour
                     and eventTime.minute == start.minute and eventTime.weekday() == start.weekday()):
                 startTime = event.get("dtstart").dt + dt.timedelta(seconds=delta)
@@ -197,7 +197,7 @@ async def deleteHours(ctx: discord.ApplicationContext, day: int, month: int, yea
     with ThreadPoolExecutor() as executor:
         for event in cal.walk("VEVENT"):
             eventTime = event.get("dtstart").dt
-            if (eventTime >= start and eventTime.day < (start + dt.timedelta(weeks=weeks)).day
+            if (start <= eventTime < (start + dt.timedelta(weeks=weeks))
                     and str(ctx.author.id) in event.get("SUMMARY") and eventTime.hour == start.hour
                     and eventTime.minute == start.minute and eventTime.weekday() == start.weekday()):
                 result += f"Removed office hours at {eventTime.strftime('%b %d %a %I:%M %p')}\n"
