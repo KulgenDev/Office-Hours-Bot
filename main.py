@@ -58,7 +58,7 @@ async def addWeeklyEvent(ctx, startDay, length_hours, length_minutes, weeks):
         with open("./calendar.ics", 'wb') as f:
             f.write(cal.to_ical())
 
-    await ctx.respond(f"Added {weeks} events starting from {startDay.strftime("%b %d %a %I:%M %p")} to {endDay.strftime("%b %d %a %I:%M %p")}")
+    await ctx.respond(f"Added {weeks} events starting from {startDay.strftime('%b %d %a %I:%M %p')} to {endDay.strftime('%b %d %a %I:%M %p')}")
 
 @bot.slash_command(name="addweeklyevent", description="Adds office hours to calendar", guild=GUILD_ID)
 @discord.option("start_day", type=int, required=True, min_value=1, max_value=31)
@@ -103,7 +103,7 @@ async def getoffcehours(ctx: discord.ApplicationContext, user: discord.User, wee
     for event in cal.walk("VEVENT"):
         if (event.get("dtstart").dt >= thisWeek and event.get("dtstart").dt < (thisWeek + dt.timedelta(weeks=weeks))
                 and str(user.id) in event.get("SUMMARY")):
-            eventTimes += event.get("dtstart").dt.strftime("%b %d %a %I:%M %p") + "\n"
+            eventTimes += event.get("dtstart").dt.strftime('%b %d %a %I:%M %p') + "\n"
 
     if(eventTimes == f"{user.name}'s office hours for this week:\n"):
         eventTimes += "None"
@@ -163,7 +163,7 @@ async def editevents(ctx: discord.ApplicationContext,  start_day: int, start_mon
                 await loop.run_in_executor(executor, e.add, 'summary', event.get("SUMMARY"))
                 await loop.run_in_executor(executor, temp.add_component, e)
 
-                result += f"{(startTime - dt.timedelta(seconds=delta)).strftime("%b %d %a %I:%M %p")} was changed to {startTime.strftime("%b %d %a %I:%M %p")}\n"
+                result += f"{(startTime - dt.timedelta(seconds=delta)).strftime('%b %d %a %I:%M %p')} was changed to {startTime.strftime('%b %d %a %I:%M %p')}\n"
 
             else:
                 await loop.run_in_executor(executor, temp.add_component, event)
@@ -200,7 +200,7 @@ async def deleteHours(ctx: discord.ApplicationContext, day: int, month: int, yea
             if (eventTime >= start and eventTime.day < (start + dt.timedelta(weeks=weeks)).day
                     and str(ctx.author.id) in event.get("SUMMARY") and eventTime.hour == start.hour
                     and eventTime.minute == start.minute and eventTime.weekday() == start.weekday()):
-                result += f"Removed office hours at {eventTime.strftime("%b %d %a %I:%M %p")}\n"
+                result += f"Removed office hours at {eventTime.strftime('%b %d %a %I:%M %p')}\n"
             else:
                 await loop.run_in_executor(executor, temp.add_component, event)
 
