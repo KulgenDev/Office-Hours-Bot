@@ -36,6 +36,7 @@ async def sync(ctx):
     await ctx.defer()
     SYNCED = await bot.sync_commands(guild_ids=[int(os.getenv("GUILD_ID"))])
     await bot.sync_commands(guild_ids=[int(os.getenv("GUILD_ID"))])
+    await bot.sync_commands()
 
     await ctx.respond("Synced Commands!")
 
