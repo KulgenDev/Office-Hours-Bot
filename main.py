@@ -34,8 +34,8 @@ async def on_ready():
 @bot.slash_command(name="sync", description="Sync events", guild=GUILD_ID)
 async def sync(ctx):
     await ctx.defer()
-    SYNCED = await bot.sync_commands(guild_ids=[int(os.getenv("GUILD_ID"))])
-    await bot.sync_commands(guild_ids=[int(os.getenv("GUILD_ID"))])
+    SYNCED = await bot.sync_commands()
+    # await bot.sync_commands(guild_ids=[int(os.getenv("GUILD_ID"))])
     await bot.sync_commands()
 
     await ctx.respond("Synced Commands!")
